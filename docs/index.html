@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grok Scout - OpenScout for Grok</title>
+  <meta name="description" content="Grok Bot / Grok MCP configuration for OpenScout — project-routed asks, direct messages, and broker-backed coordination from Grok.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #10100e;
+      --canvas:  #1b1a16;
+      --panel:   #24221d;
+      --text:    #f1ede5;
+      --muted:   #aaa196;
+      --accent:  #d59f55;
+      --border:  #353126;
+      --serif:   'EB Garamond', Georgia, serif;
+      --mono:    'JetBrains Mono', 'Menlo', 'Monaco', monospace;
+    }
+
+    html {
+      color-scheme: only dark;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-image:
+        linear-gradient(hsla(38, 72%, 72%, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, hsla(38, 72%, 72%, 0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    nav {
+      padding: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-brand .sep { color: var(--muted); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    .hero {
+      padding: 6rem 0 5rem;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.75rem);
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 18ch;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 50ch;
+      margin-bottom: 3rem;
+    }
+
+    .terminal {
+      background: var(--canvas);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 42rem;
+      position: relative;
+    }
+
+    .terminal::before,
+    .terminal::after {
+      content: '.';
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--border);
+      line-height: 1;
+    }
+    .terminal::before  { top: 6px;  left:  6px; }
+    .terminal::after   { top: 6px;  right: 6px; }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .terminal-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .terminal-body {
+      padding: 1.2rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 2;
+      overflow-x: auto;
+    }
+    .prompt { color: var(--muted); user-select: none; }
+    .cmd    { color: var(--text); white-space: nowrap; }
+    .out    { color: var(--muted); padding-left: 1.2rem; white-space: nowrap; }
+
+    section {
+      padding: 4.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2.25rem);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 55ch;
+      margin-bottom: 2.75rem;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 700px) {
+      .tools { grid-template-columns: 1fr; }
+      .wrap { padding: 0 1.25rem; }
+      nav { align-items: flex-start; gap: 1rem; flex-direction: column; }
+    }
+
+    .tool {
+      background: var(--canvas);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+    .tool-name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .tool-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 50rem;
+    }
+    .step {
+      display: flex;
+      gap: 1.75rem;
+    }
+    .step-n {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      padding-top: 0.25rem;
+      width: 1.5rem;
+    }
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    .step p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: var(--accent);
+      background: var(--panel);
+      padding: 0.1em 0.35em;
+      border-radius: 2px;
+    }
+
+    .reqs {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .reqs li {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .reqs li::before {
+      content: '-';
+      color: var(--accent);
+    }
+
+    footer {
+      padding: 2.5rem 0 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .footer-row p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .footer-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .footer-row a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <nav>
+      <a class="nav-brand" href="/">grok<span class="sep"> / </span>scout</a>
+      <ul class="nav-links">
+        <li><a href="https://openscout.app">OpenScout</a></li>
+        <li><a href="https://github.com/arach/grok-scout">GitHub</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Grok host integration</p>
+      <h1>Scout coordination for Grok.</h1>
+      <p class="hero-sub">MCP packaging that gives Grok Bot and Grok agents project-routed Scout asks, direct messages, and durable broker-backed follow-up — the same local broker as every other Scout host.</p>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <span class="terminal-title">install</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="prompt">$ </span><span class="cmd">git clone https://github.com/arach/grok-scout</span></div>
+          <div><span class="prompt">$ </span><span class="cmd">cd grok-scout</span></div>
+          <div><span class="prompt">$ </span><span class="cmd">bun run install:global</span></div>
+          <div class="out"># Grok Bot / Cursor launches scout mcp as a local stdio server</div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <p class="label">Tools</p>
+      <h2>Scout MCP for Grok.</h2>
+      <p class="lead">Grok Scout points Grok Bot (and Cursor-hosted Grok agents) at OpenScout's canonical MCP server instead of introducing a second broker. Fresh work should use projectPath + harness so the broker chooses the worker. Grok is also a first-class Scout harness — this package is the host bridge so Grok can talk to the broker, not only be launched by it.</p>
+
+      <div class="tools">
+        <div class="tool">
+          <p class="tool-name">messages_send</p>
+          <p class="tool-desc">Send a tell, FYI, status update, or wake message to a Scout-known agent or channel.</p>
+        </div>
+        <div class="tool">
+          <p class="tool-name">ask</p>
+          <p class="tool-desc">Ask by project/capability first, then return durable ref, conversation, message, flight, and work handles.</p>
+        </div>
+        <div class="tool">
+          <p class="tool-name">agents_search</p>
+          <p class="tool-desc">Discover routable Scout agents only when a specific target is unknown or ambiguous.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="label">How it works</p>
+      <h2>The host launches <code>scout mcp</code>.</h2>
+      <p class="lead">The integration stays host-specific and small. Scout owns broker state, routing, returned handles, and agent identity.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">01</span>
+          <div>
+            <h3>The installer updates MCP config</h3>
+            <p><code>scripts/install.mjs</code> writes the <code>scout</code> entry into <code>~/.cursor/mcp.json</code> or a project <code>.cursor/mcp.json</code> (the path Grok Bot and Cursor share today).</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">02</span>
+          <div>
+            <h3>The host starts the local Scout MCP server</h3>
+            <p>The MCP entry launches <code>scout mcp --context-root ${workspaceFolder}</code> over stdio.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-n">03</span>
+          <div>
+            <h3>Routing stays structured</h3>
+            <p>Use explicit tool fields such as <code>targetLabel</code>, <code>targetAgentId</code>, and <code>channel</code>. Message body text stays payload, not hidden routing metadata.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="label">Requirements</p>
+      <h2>What you need.</h2>
+      <ul class="reqs">
+        <li>Grok Bot, Cursor, or another host that reads Cursor-style <code>mcp.json</code></li>
+        <li>OpenScout installed and set up locally</li>
+        <li>A running Scout broker</li>
+        <li><code>scout</code> on PATH, or Bun available for <code>bunx @openscout/scout</code></li>
+      </ul>
+    </section>
+
+    <footer>
+      <div class="footer-row">
+        <p>Experimental local developer package - <a href="https://github.com/arach/grok-scout">github.com/arach/grok-scout</a></p>
+        <p><a href="https://openscout.app">openscout.app</a></p>
+      </div>
+      <div class="footer-row" style="margin-top: 1rem;">
+        <p>Host MCP behavior may differ between Grok Bot and Cursor; durable Scout messages and flights remain the source of truth. Grok as <code>--harness grok</code> is separate from this package.</p>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

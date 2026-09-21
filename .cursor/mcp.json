@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "scout": {
+      "type": "stdio",
+      "command": "scout",
+      "args": ["mcp", "--context-root", "${workspaceFolder}"]
+    }
+  }
+}
