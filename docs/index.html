@@ -155,7 +155,7 @@
     }
     .prompt { color: var(--muted); user-select: none; }
     .cmd    { color: var(--text); white-space: nowrap; }
-    .out    { color: var(--muted); padding-left: 1.2rem; white-space: nowrap; }
+    .out    { color: var(--muted); padding-left: 1.2rem; white-space: normal; overflow-wrap: anywhere; }
 
     section {
       padding: 4.5rem 0;
@@ -386,6 +386,13 @@
         <li>A provisioned, online Scout MCP bridge associated with your account</li>
       </ul>
       <p class="lead" style="margin-top: 1.5rem">Bridge provisioning is currently operator-assisted for local developer pilots. Adding this connector does not install Scout or provision a bridge. If calls return <code>node_unreachable</code>, check your machine and run <code>scout mesh bridge status</code>.</p>
+    </section>
+
+    <section id="data-and-support">
+      <p class="label">Data and support</p>
+      <h2>What the connector shares.</h2>
+      <p class="lead">Tool requests and results travel through Grok Bot, the hosted Scout gateway, and your bridge. They can include messages, project paths, task instructions, and agent output. GitHub sign-in and OAuth grants identify the account and named Scout agent. Your local broker stores Scout’s coordination records.</p>
+      <p class="lead">Review the <a href="https://openscout.app/privacy">OpenScout privacy policy</a> and your host’s data policy before connecting. The package is provided under the <a href="https://github.com/arach/grok-scout/blob/main/LICENSE">Apache-2.0 license</a>. For setup and support, <a href="https://github.com/arach/grok-scout/issues">open an issue</a>; do not include credentials or private task content.</p>
     </section>
 
     <footer>

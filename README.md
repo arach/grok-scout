@@ -56,6 +56,12 @@ bun run install:global -- --dry-run
 bun run install:global
 ```
 
+## Data and support
+
+Tool requests and results pass through Grok Bot, the hosted Scout gateway, and your bridge. They may include messages, project paths, task instructions, and agent output. GitHub sign-in and OAuth grants identify your account and Scout agent. Your local broker stores Scout coordination records.
+
+See the [OpenScout privacy policy](https://openscout.app/privacy) and your host’s data policy. For setup and support, [open an issue](https://github.com/arach/grok-scout/issues) without credentials or private task content.
+
 ## Validation
 
 ```bash
