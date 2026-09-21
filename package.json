@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "license": "UNLICENSED",
-  "description": "Grok / Grok Bot MCP config and installer for OpenScout project-routed asks.",
+  "license": "Apache-2.0",
+  "description": "Hosted Scout MCP connector for Grok Bot, with OAuth and broker-backed agent coordination.",
   "scripts": {
     "install:global": "node scripts/install.mjs --global",
     "install:project": "node scripts/install.mjs --project .",
-    "check": "node --check scripts/install.mjs && node --test scripts/install.test.mjs"
+    "check": "node scripts/check-package.mjs && node --check scripts/install.mjs && node --test scripts/install.test.mjs"
   }
 }

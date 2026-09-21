@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grok Scout - OpenScout for Grok</title>
-  <meta name="description" content="Grok Bot / Grok MCP configuration for OpenScout — project-routed asks, direct messages, and broker-backed coordination from Grok.">
+  <title>Scout for Grok Bot — OpenScout connector</title>
+  <meta name="description" content="Connect Grok Bot to your local Scout agents through hosted MCP and OAuth. Delegate work, exchange messages, and follow results.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -298,7 +298,7 @@
   <div class="wrap">
 
     <nav>
-      <a class="nav-brand" href="/">grok<span class="sep"> / </span>scout</a>
+      <a class="nav-brand" href="./">grok<span class="sep"> / </span>scout</a>
       <ul class="nav-links">
         <li><a href="https://openscout.app">OpenScout</a></li>
         <li><a href="https://github.com/arach/grok-scout">GitHub</a></li>
@@ -306,22 +306,21 @@
     </nav>
 
     <div class="hero">
-      <p class="eyebrow">Grok host integration</p>
-      <h1>Scout coordination for Grok.</h1>
-      <p class="hero-sub">MCP packaging that gives Grok Bot and Grok agents project-routed Scout asks, direct messages, and durable broker-backed follow-up — the same local broker as every other Scout host.</p>
+      <p class="eyebrow">Hosted MCP connector</p>
+      <h1>Your coding agents.<br>In Grok Bot.</h1>
+      <p class="hero-sub">Hand off a code review, send an update, and follow the result from one conversation. Connect Grok Bot to the local Scout agents you already work with.</p>
 
       <div class="terminal">
         <div class="terminal-bar">
           <div class="dot"></div>
           <div class="dot"></div>
           <div class="dot"></div>
-          <span class="terminal-title">install</span>
+          <span class="terminal-title">connect with OAuth</span>
         </div>
         <div class="terminal-body">
-          <div><span class="prompt">$ </span><span class="cmd">git clone https://github.com/arach/grok-scout</span></div>
-          <div><span class="prompt">$ </span><span class="cmd">cd grok-scout</span></div>
-          <div><span class="prompt">$ </span><span class="cmd">bun run install:global</span></div>
-          <div class="out"># Grok Bot / Cursor launches scout mcp as a local stdio server</div>
+          <div><span class="cmd">https://mcp.oscout.net</span></div>
+          <div class="out">Add a custom MCP server in Grok Bot → Plugins.</div>
+          <div class="out">Leave headers empty. Sign in with GitHub and approve.</div>
         </div>
       </div>
     </div>
@@ -329,7 +328,7 @@
     <section>
       <p class="label">Tools</p>
       <h2>Scout MCP for Grok.</h2>
-      <p class="lead">Grok Scout points Grok Bot (and Cursor-hosted Grok agents) at OpenScout's canonical MCP server instead of introducing a second broker. Fresh work should use projectPath + harness so the broker chooses the worker. Grok is also a first-class Scout harness — this package is the host bridge so Grok can talk to the broker, not only be launched by it.</p>
+      <p class="lead">Ask Grok Bot to delegate work in a project on your Scout machine, read replies, or check an existing flight. Scout keeps a durable record of each handoff and routes work to a compatible coding agent.</p>
 
       <div class="tools">
         <div class="tool">
@@ -349,29 +348,29 @@
 
     <section>
       <p class="label">How it works</p>
-      <h2>The host launches <code>scout mcp</code>.</h2>
-      <p class="lead">The integration stays host-specific and small. Scout owns broker state, routing, returned handles, and agent identity.</p>
+      <h2>One connection to your Scout agents.</h2>
+      <p class="lead">Grok Bot connects to the hosted gateway. Your online bridge carries requests to the local broker, where Scout owns the messages and work records.</p>
 
       <div class="steps">
         <div class="step">
           <span class="step-n">01</span>
           <div>
-            <h3>The installer updates MCP config</h3>
-            <p><code>scripts/install.mjs</code> writes the <code>scout</code> entry into <code>~/.cursor/mcp.json</code> or a project <code>.cursor/mcp.json</code> (the path Grok Bot and Cursor share today).</p>
+            <h3>Add the connector</h3>
+            <p>In Grok Bot’s Plugins settings, add a custom MCP server named OpenScout with URL <code>https://mcp.oscout.net</code>. Leave headers empty.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-n">02</span>
           <div>
-            <h3>The host starts the local Scout MCP server</h3>
-            <p>The MCP entry launches <code>scout mcp --context-root ${workspaceFolder}</code> over stdio.</p>
+            <h3>Sign in and approve</h3>
+            <p>Sign in with the GitHub account associated with your provisioned bridge. Choose the Scout agent identity and approve core tool access. Connections are shared across bots on your Cursor account.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-n">03</span>
           <div>
-            <h3>Routing stays structured</h3>
-            <p>Use explicit tool fields such as <code>targetLabel</code>, <code>targetAgentId</code>, and <code>channel</code>. Message body text stays payload, not hidden routing metadata.</p>
+            <h3>Make your first handoff</h3>
+            <p>First ask Grok Bot to call <code>whoami</code>. Then ask it to delegate a review in your project directory. Keep the returned work handle for follow-up.</p>
           </div>
         </div>
       </div>
@@ -381,20 +380,21 @@
       <p class="label">Requirements</p>
       <h2>What you need.</h2>
       <ul class="reqs">
-        <li>Grok Bot, Cursor, or another host that reads Cursor-style <code>mcp.json</code></li>
+        <li>Grok Bot with custom MCP support</li>
         <li>OpenScout installed and set up locally</li>
         <li>A running Scout broker</li>
-        <li><code>scout</code> on PATH, or Bun available for <code>bunx @openscout/scout</code></li>
+        <li>A provisioned, online Scout MCP bridge associated with your account</li>
       </ul>
+      <p class="lead" style="margin-top: 1.5rem">Bridge provisioning is currently operator-assisted for local developer pilots. Adding this connector does not install Scout or provision a bridge. If calls return <code>node_unreachable</code>, check your machine and run <code>scout mesh bridge status</code>.</p>
     </section>
 
     <footer>
       <div class="footer-row">
-        <p>Experimental local developer package - <a href="https://github.com/arach/grok-scout">github.com/arach/grok-scout</a></p>
+        <p>High-trust local developer pilots · <a href="https://github.com/arach/grok-scout">github.com/arach/grok-scout</a></p>
         <p><a href="https://openscout.app">openscout.app</a></p>
       </div>
       <div class="footer-row" style="margin-top: 1rem;">
-        <p>Host MCP behavior may differ between Grok Bot and Cursor; durable Scout messages and flights remain the source of truth. Grok as <code>--harness grok</code> is separate from this package.</p>
+        <p>Custom MCP setup is available today. Marketplace submission is being prepared. Scout’s Grok CLI execution harness is separate from this hosted connector.</p>
       </div>
     </footer>
 

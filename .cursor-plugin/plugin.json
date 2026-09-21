@@ -1,0 +1,20 @@
+{
+  "name": "grok-scout",
+  "version": "0.1.0",
+  "description": "Connect Grok Bot to your local Scout agents for messages, coding handoffs, and tracked results. Requires a provisioned Scout bridge.",
+  "author": {
+    "name": "OpenScout"
+  },
+  "homepage": "https://arach.github.io/grok-scout/",
+  "repository": "https://github.com/arach/grok-scout",
+  "license": "Apache-2.0",
+  "logo": "assets/logo.svg",
+  "keywords": [
+    "scout",
+    "grok",
+    "agents",
+    "coordination",
+    "mcp"
+  ],
+  "mcpServers": "mcp.json"
+}

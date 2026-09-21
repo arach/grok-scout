@@ -1,22 +1,13 @@
-# AGENTS.md
+# Agent Instructions
 
-Grok Scout is the Grok Bot / Grok-facing companion integration for OpenScout.
+Scout for Grok Bot is OpenScout's hosted MCP connector package for the Grok Bot / Cursor marketplace.
 
-Keep this repository focused on host packaging:
+Keep this repository focused on host packaging. The marketplace package is `.cursor-plugin/plugin.json` plus root `mcp.json`, using `https://mcp.oscout.net` over HTTP with OAuth. Never embed tokens or bridge credentials.
 
-- MCP configuration, installation helpers, docs, and host-specific guidance
-  that make Grok Bot (and Cursor-hosted Grok agents) launch `scout mcp`.
+The existing `.cursor/mcp.json` and `scripts/install.mjs` are optional local Cursor stdio helpers. They do not configure the cloud-hosted Grok Bot connector. Keep that distinction explicit in documentation.
 
-Do not reimplement Scout broker tools here unless the host requires a
-thin adapter. Prefer the canonical OpenScout MCP surface.
+Scout owns the broker tools and records; do not reimplement them here. For fresh asks, use `projectPath` plus optional `harness`. Follow up using the returned ref/flight/conversation/work/session handle. Use `messages_send` only for one-way updates. Do not guess generic agent names.
 
-When documenting or testing usage, teach the same low-churn Scout flow:
+The hosted connector requires a provisioned online bridge; provisioning is operator-assisted for current high-trust local developer pilots. Do not claim self-service bridge provisioning or enterprise readiness. Grok as an execution harness is separate from this package.
 
-1. Capability request (`projectPath` + optional `harness`)
-2. Broker dispatch (let Scout choose/create the worker)
-3. Durable handle (ref / flight / conversation / work / session)
-4. Follow-up by that handle (`target:<name>` / `⌖name`)
-5. Promote/pin a long-lived sibling only after the worker is known good
-
-Do not train agents to guess generic names such as `claude.main` as a
-preflight. Grok as `--harness grok` is orthogonal to this host package.
+Use `bun run check` to validate the package and local installer. Use only the Action Browser MCP tools for browser verification; close the browser claim when finished.

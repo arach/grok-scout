@@ -1,128 +1,65 @@
-# Grok Scout
+# Scout for Grok Bot
 
-Grok Scout packages OpenScout for **Grok Bot**, **Grok CLI / ACP**, and Cursor
-hosts that run Grok agents — through the same MCP configuration surface Cursor
-already uses.
+Bring your local coding agents into a Grok Bot conversation. Scout connects Grok Bot to your OpenScout broker so you can delegate work, exchange messages, and follow results from one chat.
 
-The repository is named `grok-scout`; the MCP server name is `scout`. The host
-launches OpenScout's existing stdio MCP server:
+[Connection guide](https://arach.github.io/grok-scout/) · [OpenScout](https://openscout.app) · [MCP gateway](https://mcp.oscout.net)
 
-```bash
-scout mcp
-```
+## Connect
 
-This repo does not implement a second Scout MCP server. It provides the Grok-facing
-host packaging, config, docs, and install helpers. Grok is also a first-class
-OpenScout **harness** (`--harness grok` / `grok-acp`); this package is the
-host-side bridge so Grok sessions can talk *to* the broker, not only be
-launched *by* it.
+**MCP URL: `https://mcp.oscout.net`**
 
-## Why this exists
+1. Open Grok Bot's Plugins settings and add a custom MCP server named **OpenScout**.
+2. Enter the URL above and leave custom headers empty.
+3. Sign in with GitHub using the account associated with your Scout bridge.
+4. Choose the agent identity that will appear in Scout and approve core tool access.
+5. Ask Grok Bot to call Scout's `whoami` tool and confirm the expected identity.
 
-OpenScout already launches Grok as a harness. Claude, Codex, Cursor, pi, and
-Hermes each also ship a thin host package. Grok Scout is that missing package:
-discoverable install + docs so Grok Bot / Grok agents get Scout MCP the same
-way Cursor Scout does.
+The connector uses OAuth; no API key needs to be pasted into Grok Bot. Marketplace review is pending submission; custom MCP setup is available today.
 
-## Routing model
+## Requirements
 
-Prefer OpenScout's canonical MCP `ask` tool. For fresh work, pass `projectPath`
-plus optional `harness` and let the broker choose or create the worker. Use
-`targetSessionId` only for exact prior-context continuity. Do not guess generic
-names such as `claude.main`; continue with the broker-returned
-ref/flight/conversation/work/session handle.
+You need OpenScout installed, a running local broker, and a provisioned MCP bridge associated with your account. Your Scout machine and bridge must stay online. Bridge provisioning is currently operator-assisted for local developer pilots; adding this connector does not install Scout or provision a bridge.
 
-Example MCP ask shape:
+If a call returns `node_unreachable`, check your machine and run `scout mesh bridge status` there. Complete bridge provisioning with your Scout operator if no bridge exists.
 
-```json
-{
-  "projectPath": "/Users/you/dev/openscout",
-  "harness": "grok",
-  "body": "Review the Grok harness adapter.",
-  "replyMode": "notify"
-}
-```
+## Try a handoff
 
-Website: <https://arach.github.io/grok-scout/>
+> Use Scout to ask a Claude agent in /path/to/project to review the latest changes. Keep the returned work handle for follow-up.
 
-Repository: <https://github.com/arach/grok-scout>
+The path refers to your Scout machine. For fresh work, pass `projectPath` plus optional `harness` to `ask`. Let the broker route to a compatible worker. Continue by the returned ref, flight, conversation, work, or session handle; do not guess generic agent names.
 
-## Included Surfaces
+Use `ask` for work that expects a reply. Use `messages_send` for one-way updates to a known agent or explicit channel. The core MCP tools also expose inbox messages, agent discovery, work updates, and flight inspection.
 
-- `.cursor/mcp.json`: project-level MCP config for local testing (Grok Bot and Cursor share this shape)
-- `scripts/install.mjs`: installer for global `~/.cursor/mcp.json` or project `.cursor/mcp.json`
-- `docs/index.html`: static project page for GitHub Pages
-
-## Prerequisites
-
-- Grok Bot, Cursor, or another host that reads Cursor-style `mcp.json`
-- OpenScout installed and set up locally
-- A running Scout broker
-- `scout` on `PATH`, or Bun available so the installer can fall back to
-  `bunx @openscout/scout`
-
-Recommended local setup:
-
-```bash
-bun add -g @openscout/scout
-scout setup
-scout doctor
-```
-
-## Install Globally
-
-From this repository:
-
-```bash
-bun run install:global
-```
-
-That writes or updates:
+## How it works
 
 ```text
-~/.cursor/mcp.json
+Grok Bot → hosted MCP gateway → your online Scout bridge → local broker → coding agents
 ```
 
-with a `scout` MCP server entry. Grok Bot and Cursor both use this config path
-today.
+The gateway supplies the authenticated agent identity. The broker owns the messages and work records. OAuth grants the core `mcp:core` scope for messaging, asks, and following work. Grok Bot connections are shared across bots on the same Cursor account.
 
-To preview the write:
+Scout's Grok CLI execution harness is a separate integration. This package lets Grok Bot reach Scout remotely.
+
+## Marketplace package
+
+- `.cursor-plugin/plugin.json`: Cursor plugin manifest.
+- `mcp.json`: hosted MCP server definition using HTTP/OAuth, without embedded credentials.
+- `assets/logo.svg`: Scout mark for the listing.
+- `docs/index.html`: public connection guide.
+
+## Optional local Cursor setup
+
+The retained `.cursor/mcp.json` and `scripts/install.mjs` support local Cursor sessions that launch `scout mcp` over stdio. These helpers do **not** configure Grok Bot's hosted connector. For a local Cursor installation only:
 
 ```bash
 bun run install:global -- --dry-run
+bun run install:global
 ```
 
-To replace an existing non-matching `scout` entry:
+## Validation
 
 ```bash
-bun run install:global -- --force
+bun run check
 ```
 
-## Install Into A Project
-
-```bash
-bun run install:project
-```
-
-Writes `.cursor/mcp.json` in the current project.
-
-## Verify
-
-```bash
-scout doctor
-# In Grok Bot / Cursor, confirm the scout MCP tools are listed (ask, send, who, …)
-```
-
-## Related
-
-- [OpenScout](https://openscout.app) — local broker
-- [Cursor Scout](https://github.com/arach/cursor-scout) — same MCP packaging for Cursor-first docs
-- [Host integrations](https://openscout.app/docs/integrations) — full map
-
-## Notes
-
-- Events and MCP notifications only arrive while the host keeps the MCP server
-  connected.
-- Durable Scout flights and messages remain the source of truth across hosts.
-- Grok as an *execution* harness (`scout ask --harness grok`) is separate from
-  this host package; both are part of the Grok ↔ Scout story.
+OpenScout is for high-trust local developer pilots. Licensed Apache-2.0; see LICENSE and NOTICE.

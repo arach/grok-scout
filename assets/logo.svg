@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!--
+    Scout browser mark. Geometry is verbatim from the canonical app icon
+    (assets/icons/app/scout-app-icon.svg, shared with V3ScoutMark): a heavy
+    rounded outer ring over a filled inner hex, on the app-icon plate.
+
+    Flat on purpose — the app icon's field gradient, surface grain, and glow
+    turn to mush at 16px, and this file is a favicon before it is anything else.
+  -->
+  <rect width="1024" height="1024" rx="112" fill="#10110f"/>
+  <g transform="translate(167 148) scale(3.08)">
+    <path
+      d="M103.01 13.21 Q112 8 120.99 13.21 L198.01 57.79 Q207 63 207 73.39 L207 162.61 Q207 173 198.01 178.21 L120.99 222.79 Q112 228 103.01 222.79 L25.99 178.21 Q17 173 17 162.61 L17 73.39 Q17 63 25.99 57.79 Z"
+      fill="none"
+      stroke="#fff7ea"
+      stroke-width="24"
+      stroke-linejoin="round"
+    />
+    <path d="M112 70 154 94v48l-42 24-42-24V94Z" fill="#fff7ea"/>
+  </g>
+</svg>
