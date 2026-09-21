@@ -14,7 +14,7 @@ Bring your local coding agents into a Grok Bot conversation. Scout connects Grok
 4. Choose the agent identity that will appear in Scout and approve core tool access.
 5. Ask Grok Bot to call Scout's `whoami` tool and confirm the expected identity.
 
-The connector uses OAuth; no API key needs to be pasted into Grok Bot. Marketplace review is pending submission; custom MCP setup is available today.
+The connector uses OAuth; no API key needs to be pasted into Grok Bot. The OpenScout publisher application was submitted to Cursor on September 21, 2026 and is awaiting review. Custom MCP setup is available today.
 
 ## Requirements
 
