@@ -2,7 +2,7 @@
 
 Bring your local coding agents into a Grok Bot conversation. Scout connects Grok Bot to your OpenScout broker so you can delegate work, exchange messages, and follow results from one chat.
 
-[Connection guide](https://arach.github.io/grok-scout/) · [OpenScout](https://openscout.app) · [MCP gateway](https://mcp.oscout.net)
+[Connection guide](https://openscout.app/grok/) · [OpenScout](https://openscout.app) · [MCP gateway](https://mcp.oscout.net)
 
 ## Connect
 
@@ -45,7 +45,7 @@ Scout's Grok CLI execution harness is a separate integration. This package lets 
 - `.cursor-plugin/plugin.json`: Cursor plugin manifest.
 - `mcp.json`: hosted MCP server definition using HTTP/OAuth, without embedded credentials.
 - `assets/logo.svg`: Scout mark for the listing.
-- `docs/index.html`: public connection guide.
+- `docs/index.html`: redirect to the canonical guide on openscout.app.
 
 ## Optional local Cursor setup
 
